@@ -1,7 +1,10 @@
 Semisimple Lie Algebras
 Version: 0.1
 
-An incomplete Mathematica package for doing calculations on semisimple Lie algebras and a notebook full of tests of the various functions.  
+An incomplete Mathematica package for doing calculations on semisimple Lie algebras and a notebook full of tests of the various functions.
+
+To aid sensible version control, history tracking and caching have been disabled in the SemisimpleLieAlg.tests.nb notebook. Also, all output is deleted and cells minimized before commits.
+http://stackoverflow.com/questions/2816628/version-control-of-mathematica-notebooks
 
 The original code is hosted at http://github.com/simonjtyler/SemisimpleLieAlg
-If you wish to use or contribute to this package, or have any other comments, please message me on github. 
+If you wish to use or contribute to this package, or have any other comments, please message me on github.

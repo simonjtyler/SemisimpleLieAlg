@@ -1,0 +1,3363 @@
+Notebook[{
+Cell["\<\
+This nb contains some tests and notes for the package SemisimpleLieAlg.m and \
+should be kept in the same directory.\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"reload", ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"Unprotect", "[", 
+     RowBox[{"Evaluate", "[", 
+      RowBox[{"Names", "[", "\"\<SemisimpleLieAlg`*\>\"", "]"}], "]"}], "]"}],
+     ";", "\[IndentingNewLine]", 
+    RowBox[{"Clear", "[", 
+     RowBox[{"Evaluate", "[", 
+      RowBox[{"Sequence", "@@", 
+       RowBox[{"Names", "[", "\"\<SemisimpleLieAlg`*\>\"", "]"}]}], "]"}], 
+     "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Unprotect", "[", 
+     RowBox[{"Evaluate", "[", 
+      RowBox[{"Names", "[", "\"\<SemisimpleLieAlg`Private`*\>\"", "]"}], 
+      "]"}], "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Clear", "[", 
+     RowBox[{"Evaluate", "[", 
+      RowBox[{"Sequence", "@@", 
+       RowBox[{"Names", "[", "\"\<SemisimpleLieAlg`Private`*\>\"", "]"}]}], 
+      "]"}], "]"}], ";", "\n", 
+    RowBox[{"Get", "[", 
+     RowBox[{"ToFileName", "[", 
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", 
+        RowBox[{"EvaluationNotebook", "[", "]"}], "]"}], ",", 
+       "\"\<SemisimpleLieAlg.m\>\""}], "]"}], "]"}]}], 
+   ")"}]}], "\[IndentingNewLine]", "reload"}], "Input",
+ InitializationCell->True],
+
+Cell[CellGroupData[{
+
+Cell["Notes", "Subsubtitle"],
+
+Cell[TextData[{
+ "Start with definition of Cartan Matrix  which gives us the inner products \
+if we know the squared lengths.  (For a ",
+ StyleBox["simple",
+  FontSlant->"Italic"],
+ " Lie algebra there are only two lengths of roots).\nStarting with the \
+length of ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Alpha]", "1"], TraditionalForm]]],
+ " we can then iteratively generate the rest of the lengths.  The lengths are \
+then combined with the Cartan matrix to get the inner products."
+}], "Text"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   SubscriptBox["A", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], "=", 
+   RowBox[{
+    RowBox[{"2", " ", 
+     RowBox[{
+      FractionBox[
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["\[Alpha]", "i"], ",", 
+         SubscriptBox["\[Alpha]", "j"]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["\[Alpha]", "j"], ",", 
+         SubscriptBox["\[Alpha]", "j"]}], ")"}]], "   ", 
+      "\[DoubleLongRightArrow]", "   ", 
+      RowBox[{"(", 
+       RowBox[{
+        SubscriptBox["\[Alpha]", "i"], ",", 
+        SubscriptBox["\[Alpha]", "j"]}], ")"}]}]}], "=", 
+    RowBox[{
+     RowBox[{
+      FractionBox["1", "2"], 
+      RowBox[{"(", 
+       RowBox[{
+        SubscriptBox["\[Alpha]", "j"], ",", 
+        SubscriptBox["\[Alpha]", "j"]}], ")"}], 
+      SubscriptBox["A", 
+       RowBox[{"i", "\[InvisibleComma]", "j"}]]}], "=", 
+     RowBox[{
+      RowBox[{
+       FractionBox["1", "2"], 
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["\[Alpha]", "i"], ",", 
+         SubscriptBox["\[Alpha]", "i"]}], ")"}], 
+       RowBox[{
+        SubscriptBox["A", 
+         RowBox[{"j", "\[InvisibleComma]", "i"}]], "  ", 
+        "\[DoubleLongRightArrow]", "   ", 
+        RowBox[{"(", 
+         RowBox[{
+          SubscriptBox["\[Alpha]", "i"], ",", 
+          SubscriptBox["\[Alpha]", "i"]}], ")"}]}]}], "=", 
+      RowBox[{
+       FractionBox[
+        SubscriptBox["A", 
+         RowBox[{"i", "\[InvisibleComma]", "j"}]], 
+        SubscriptBox["A", 
+         RowBox[{"j", "\[InvisibleComma]", "i"}]]], 
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["\[Alpha]", "j"], ",", 
+         SubscriptBox["\[Alpha]", "j"]}], ")"}]}]}]}]}]}], 
+  TraditionalForm]], "DisplayFormula"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Subsubtitle"],
+
+Cell[CellGroupData[{
+
+Cell["Matrices", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["ZeroMatrix and StandardBasis", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{"ZeroMatrix", "[", "7", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"ZeroMatrix", "[", 
+  RowBox[{"7", ",", 
+   RowBox[{"\"\<Sparse\>\"", "\[Rule]", "True"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"ZeroMatrix", "[", 
+  RowBox[{"7", ",", 
+   RowBox[{"\"\<SparseAfter\>\"", "\[Rule]", "6"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"StandardBasis", "[", 
+   RowBox[{
+    RowBox[{"{", "4", "}"}], ",", "5"}], "]"}], "//", "MatrixForm"}], "\n", 
+ RowBox[{"StandardBasis", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", "5", ",", 
+   RowBox[{"\"\<Sparse\>\"", "\[Rule]", "True"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"%", "//", "MatrixForm"}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["CartanMatrixStringSplit", "Subsubsection"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<a2*a2\>\"", "]"}], "\n", 
+ RowBox[{"CartanMatrix", "@", "%"}], "\n", 
+ RowBox[{"%", "==", 
+  RowBox[{"CartanMatrix", "[", "\"\<a2*a2\>\"", "]"}], "==", 
+  RowBox[{"CartanMatrix", "[", "\"\<a2xa2\>\"", "]"}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<a4*b3xC20 * e7\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", "\"\<a2*aa2* c5  \>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<a1b11*c111xd1111 e6\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<jka1e11j6\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<a1x1a6\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<a0a1a11a111a11a1a0\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SemisimpleLieAlg`Private`CartanMatrixStringSplit", "[", 
+  "\"\<2x7\>\"", "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["CartanMatrices", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", 
+    RowBox[{"#", ",", "1"}], "]"}], "&"}], "/@", 
+  RowBox[{"CharacterRange", "[", 
+   RowBox[{"\"\<a\>\"", ",", "\"\<g\>\""}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CartanMatrix", "[", "\"\<E4\>\"", "]"}], "\[Equal]", 
+  RowBox[{"CartanMatrix", "[", "\"\<A4\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CartanMatrix", "[", "\"\<E5\>\"", "]"}], "\[Equal]", 
+  RowBox[{"CartanMatrix", "[", "\"\<D5\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"MatrixForm", "/@", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", 
+      RowBox[{"#", ",", "4"}], "]"}], "&"}], "/@", 
+    RowBox[{"CharacterRange", "[", 
+     RowBox[{"\"\<a\>\"", ",", "\"\<d\>\""}], "]"}]}], ")"}]}], "\n", 
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", 
+      RowBox[{"#", ",", "4"}], "]"}], "&"}], "/@", 
+    RowBox[{"CharacterRange", "[", 
+     RowBox[{"\"\<a\>\"", ",", "\"\<d\>\""}], "]"}]}], ")"}], "==", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", 
+      RowBox[{"#", ",", "4"}], "]"}], "&"}], "/@", 
+    RowBox[{"CharacterRange", "[", 
+     RowBox[{"\"\<A\>\"", ",", "\"\<D\>\""}], "]"}]}], ")"}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"MatrixForm", "/@", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", 
+      RowBox[{"\"\<e\>\"", ",", "#"}], "]"}], "&"}], "/@", 
+    RowBox[{"Range", "[", 
+     RowBox[{"4", ",", "9"}], "]"}]}], ")"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", 
+  RowBox[{"\"\<e\>\"", ",", "3"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", 
+  RowBox[{"\"\<f\>\"", ",", "4"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", 
+  RowBox[{"\"\<f\>\"", ",", "5"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", 
+  RowBox[{"\"\<g\>\"", ",", "2"}], "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrix", "[", 
+  RowBox[{"\"\<A\>\"", ",", "6", ",", 
+   RowBox[{"\"\<Sparse\>\"", "->", "True"}]}], "]"}], "\n", 
+ RowBox[{"CartanMatrix", "[", 
+  RowBox[{"\"\<f\>\"", ",", "4", ",", 
+   RowBox[{"\"\<Sparse\>\"", "->", "True"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CartanMatrix", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<a\>\"", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<a\>\"", ",", "2"}], "}"}]}], "}"}], "]"}], "//", 
+  "MatrixForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", "\"\<b2\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanMatrix", "[", "\"\<2xxxx7\>\"", "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["CartanMatrixQ", "Subsubsection"],
+
+Cell["the second argument is why:(True|False):False", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Options", "[", "CartanMatrixQ", "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "2"}], ",", "2."}], "}"}]}], "}"}], ",", "True"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "2"}], ",", "2."}], "}"}]}], "}"}], ",", "True", ",", " ", 
+   RowBox[{"\"\<Strict\>\"", "\[Rule]", "True"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}], ",", "True"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}], ",", "True", ",", " ", 
+   
+   RowBox[{"\"\<Strict\>\"", "\[Rule]", "True"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "}"}], ",", "True"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "}"}], ",", "True", ",", " ", 
+   
+   RowBox[{"\"\<Strict\>\"", "\[Rule]", "True"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "4"}], ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}], ",", "True"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "4"}], ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}], ",", "True", ",", 
+   RowBox[{"\"\<Strict\>\"", "\[Rule]", "True"}]}], "]"}]}], "Input"],
+
+Cell["Don't always want the Messages...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "1"}], ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "2", ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "4"}], ",", 
+      RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"CartanMatrixQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "4"}], ",", 
+       RowBox[{"-", "2"}], ",", "2"}], "}"}]}], "}"}], ",", 
+   RowBox[{"\"\<Strict\>\"", "\[Rule]", "True"}]}], "]"}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["CartanType", "Subsubsection"],
+
+Cell["\<\
+Low dimensional coincidences (although I distiguish B2 from C2 because I can)\
+\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CartanType", "[", 
+    RowBox[{"CartanMatrix", "[", "#", "]"}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{
+   "\"\<b1\>\"", ",", "\"\<c1\>\"", ",", "\"\<b2\>\"", ",", "\"\<c2\>\"", 
+    ",", "\"\<d2\>\"", ",", "\"\<d3\>\"", ",", "\"\<e4\>\"", ",", 
+    "\"\<e5\>\""}], "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"CartanType", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"\"\<Positions\>\"", "\[Rule]", "True"}]}], "]"}], ",", 
+     RowBox[{"DynkinDiagram", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"\"\<RowOrColumn\>\"", "\[Rule]", "Row"}]}], "]"}]}], "}"}], 
+   "&"}], "@", 
+  RowBox[{"CartanMatrix", "[", "\"\<c3*b3*d4*g2\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"CartanType", "[", "#", "]"}], ",", 
+     RowBox[{"DynkinDiagram", "[", "#", "]"}]}], "}"}], "&"}], "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<f4\>\"", "]"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"CartanType", "[", "#", "]"}], ",", 
+     RowBox[{"DynkinDiagram", "[", "#", "]"}]}], "}"}], "&"}], "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<f4\>\"", "]"}], "\[Transpose]"}], 
+  "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanType", "[", 
+  FormBox[
+   RowBox[{"(", "\[NoBreak]", GridBox[{
+      {"2", 
+       RowBox[{"-", "1"}], "0", "0", "0", "0"},
+      {
+       RowBox[{"-", "1"}], "2", 
+       RowBox[{"-", "2"}], "0", "0", "0"},
+      {"0", 
+       RowBox[{"-", "1"}], "2", 
+       RowBox[{"-", "1"}], "0", "0"},
+      {"0", "0", 
+       RowBox[{"-", "1"}], "2", "0", "0"},
+      {"0", "0", "0", "0", "2", 
+       RowBox[{"-", "3"}]},
+      {"0", "0", "0", "0", 
+       RowBox[{"-", "2"}], "2"}
+     },
+     GridBoxAlignment->{
+      "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}},
+        "RowsIndexed" -> {}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.7]}, 
+         Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+         Offset[0.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+   TraditionalForm], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"CartanType", "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<f4*a200*a1*e8*a1*e6xa1g2\>\"", "]"}], 
+  "]"}]], "Input"],
+
+Cell["\<\
+Note that the extension of Position for sparse matrices is effective:\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConnectedComponents", "[", 
+    RowBox[{"CartanMatrix", "[", "\"\<b2000\>\"", "]"}], "]"}], "\[Equal]", 
+   RowBox[{"{", 
+    RowBox[{"Range", "[", "2000", "]"}], "}"}]}], "//", 
+  "Timing"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"ConnectedComponents", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<b2000\>\"", "]"}], "//", "Normal"}], 
+    "]"}], "\[Equal]", 
+   RowBox[{"{", 
+    RowBox[{"Range", "[", "2000", "]"}], "}"}]}], "//", "Timing"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"CartanType", "[", 
+   RowBox[{"CartanMatrix", "[", "\"\<b600\>\"", "]"}], "]"}], "//", 
+  "Timing"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"CartanType", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<b600\>\"", "]"}], "//", "Normal"}], 
+   "]"}], "//", "Timing"}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["CartanMatrixInverse", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"CartanMatrix", "[", 
+       RowBox[{"\"\<A\>\"", ",", "r"}], "]"}], ".", 
+      RowBox[{"CartanMatrixInverse", "[", 
+       RowBox[{"\"\<A\>\"", ",", "r"}], "]"}]}], "\[Equal]", 
+     RowBox[{"IdentityMatrix", "[", "r", "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"r", ",", "1", ",", "100"}], "}"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"CartanMatrix", "[", 
+       RowBox[{"\"\<B\>\"", ",", "r"}], "]"}], ".", 
+      RowBox[{"CartanMatrixInverse", "[", 
+       RowBox[{"\"\<B\>\"", ",", "r"}], "]"}]}], "\[Equal]", 
+     RowBox[{"IdentityMatrix", "[", "r", "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"r", ",", "2", ",", "50"}], "}"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"CartanMatrix", "[", 
+       RowBox[{"\"\<C\>\"", ",", "r"}], "]"}], ".", 
+      RowBox[{"CartanMatrixInverse", "[", 
+       RowBox[{"\"\<C\>\"", ",", "r"}], "]"}]}], "\[Equal]", 
+     RowBox[{"IdentityMatrix", "[", "r", "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"r", ",", "2", ",", "50"}], "}"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"CartanMatrix", "[", 
+       RowBox[{"\"\<D\>\"", ",", "r"}], "]"}], ".", 
+      RowBox[{"CartanMatrixInverse", "[", 
+       RowBox[{"\"\<D\>\"", ",", "r"}], "]"}]}], "\[Equal]", 
+     RowBox[{"IdentityMatrix", "[", "r", "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"r", ",", "3", ",", "50"}], "}"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixInverse", "[", 
+  RowBox[{"\"\<E\>\"", ",", "6"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"%", ".", 
+   RowBox[{"CartanMatrix", "[", "\"\<E6\>\"", "]"}]}], "\[Equal]", 
+  RowBox[{"IdentityMatrix", "[", "6", "]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixInverse", "[", 
+  RowBox[{"\"\<G\>\"", ",", "2"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"%", ".", 
+   RowBox[{"CartanMatrix", "[", "\"\<g2\>\"", "]"}]}], "\[Equal]", 
+  RowBox[{"IdentityMatrix", "[", "2", "]"}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Timing", "[", 
+       RowBox[{
+        RowBox[{"A1", "=", 
+         RowBox[{"Inverse", "[", 
+          RowBox[{"CartanMatrix", "[", 
+           RowBox[{"\"\<A\>\"", ",", "r"}], "]"}], "]"}]}], ";"}], "]"}], 
+      "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Timing", "[", 
+       RowBox[{
+        RowBox[{"A2", "=", 
+         RowBox[{
+          RowBox[{"Array", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"#1", "\[GreaterEqual]", "#2"}], ",", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"r", "+", "1", "-", "#1"}], ")"}], "#2"}], ",", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"r", "+", "1", "-", "#2"}], ")"}], "#1"}]}], "]"}], 
+             "&"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"r", ",", "r"}], "}"}]}], "]"}], "/", 
+          RowBox[{"(", 
+           RowBox[{"r", "+", "1"}], ")"}]}]}], ";"}], "]"}], 
+      "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"A1", "\[Equal]", "A2"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"r", ",", "1", ",", "500", ",", "100"}], "}"}]}], 
+  "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Inverse[CartanMatrix[]] vs CartanMatrixInverse[CartanType[]] & \
+\>", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Inverse", "[", 
+    RowBox[{"CartanMatrix", "[", "\"\<d40e8a50b25\>\"", "]"}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrixInverse", "[", 
+    RowBox[{"CartanType", "[", 
+     RowBox[{"CartanMatrix", "[", "\"\<d40e8a50b25\>\"", "]"}], "]"}], "]"}], 
+   ";"}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"type", "=", "\"\<d40e8a50b25c70f4\>\""}], ";"}], "\n", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"a", "=", 
+    RowBox[{"Inverse", "[", 
+     RowBox[{"CartanMatrix", "[", "type", "]"}], "]"}]}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"b", "=", 
+    RowBox[{"CartanMatrixInverse", "[", 
+     RowBox[{"CartanType", "[", 
+      RowBox[{"CartanMatrix", "[", "type", "]"}], "]"}], "]"}]}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"c", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"CartanMatrixInverse", "[", 
+        RowBox[{"#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+        "]"}], "\[LeftDoubleBracket]", 
+       RowBox[{
+        RowBox[{"Flatten", "@", 
+         RowBox[{
+         "#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], ",", 
+        RowBox[{"Flatten", "@", 
+         RowBox[{
+         "#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}]}], 
+       "\[RightDoubleBracket]"}], "&"}], "[", 
+     RowBox[{
+      RowBox[{"CartanType", "[", 
+       RowBox[{
+        RowBox[{"CartanMatrix", "[", "type", "]"}], ",", 
+        RowBox[{"\"\<Positions\>\"", "\[Rule]", "True"}]}], "]"}], 
+      "\[Transpose]"}], "]"}]}], ";"}], "]"}], "\n", 
+ RowBox[{"a", "\[Equal]", "b", "\[Equal]", "c"}], "\[IndentingNewLine]", 
+ RowBox[{"Clear", "[", 
+  RowBox[{"type", ",", "a", ",", "b", ",", "c"}], "]"}]}], "Input"],
+
+Cell["\<\
+The final expression, c, does not work in general because ConnectedComponents \
+does not return each component in standard order...
+The blocks are correct, but can not be used to generate the correct \
+permutation...
+This could be fixed but is not worth the effort - unless we want to deal with \
+huge, r>100 algebras not using named Cartan matrices.\
+\>", "Text"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"p", "=", 
+   RowBox[{
+    RowBox[{"Permutations", "[", 
+     RowBox[{"Range", "[", "10", "]"}], "]"}], "//", "RandomChoice"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"A", "=", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<d4e6\>\"", "]"}], 
+    "\[LeftDoubleBracket]", 
+    RowBox[{"p", ",", "p"}], "\[RightDoubleBracket]"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[{"p", "\[IndentingNewLine]", 
+ RowBox[{"pp", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SortBy", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"p", ",", 
+         RowBox[{"Range", "[", "10", "]"}]}], "}"}], "\[Transpose]"}], ",", 
+      "First"}], "]"}], "\[Transpose]"}], "\[LeftDoubleBracket]", "2", 
+   "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"A", "\[LeftDoubleBracket]", 
+   RowBox[{"pp", ",", "pp"}], "\[RightDoubleBracket]"}], "==", 
+  RowBox[{"CartanMatrix", "[", "\"\<d4e6\>\"", "]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanType", "[", 
+  RowBox[{"A", ",", 
+   RowBox[{"\"\<Positions\>\"", "\[Rule]", "True"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"%", "\[Transpose]"}], "\[LeftDoubleBracket]", "1", 
+   "\[RightDoubleBracket]"}], "//", "Flatten"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"A", "\[LeftDoubleBracket]", 
+   RowBox[{"%", ",", "%"}], "\[RightDoubleBracket]"}], "//", 
+  "MatrixForm"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"CartanMatrixInverse", "[", "A", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Inverse", "[", "A", "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CartanMatrixInverse", "[", "A", "]"}], ".", "A"}], "\[Equal]", 
+  RowBox[{"IdentityMatrix", "[", "10", "]"}]}]], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graphs - Dynkin", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["ConnectedComponents", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{"GraphPlot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"1", "->", "2"}], ",", 
+     RowBox[{"2", "->", "3"}], ",", 
+     RowBox[{"4", "->", "6"}], ",", 
+     RowBox[{"1", "->", "5"}]}], "}"}], ",", 
+   RowBox[{"VertexLabeling", "\[Rule]", "True"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"ConnectedComponents", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"1", "->", "2"}], ",", 
+    RowBox[{"2", "->", "3"}], ",", 
+    RowBox[{"4", "->", "6"}], ",", 
+    RowBox[{"1", "->", "5"}]}], "}"}], "]"}]}], "Input"],
+
+Cell["use to disentangle Cartan matrices", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"CartanMatrix", "[", "\"\<a2*a2\>\"", "]"}], "//", 
+  "MatrixForm"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"%", "[", 
+      RowBox[{"[", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "3", ",", "2", ",", "4"}], "}"}], "]"}], "]"}], 
+     "\[Transpose]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "3", ",", "2", ",", "4"}], "}"}], "]"}], "]"}], 
+   "\[Transpose]"}], "//", "MatrixForm"}], "\n", 
+ RowBox[{"ConnectedComponents", "[", "%", "]"}], "\n", 
+ RowBox[{"MatrixForm", "/@", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"%%", "[", 
+      RowBox[{"[", 
+       RowBox[{"#", ",", "#"}], "]"}], "]"}], "&"}], "/@", "%"}], 
+   ")"}]}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["DynkinDiagrams", "Subsubsection"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<g2a1a3\>\"", "]"}], ",", 
+   RowBox[{"Array", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Style", "[", 
+       RowBox[{
+        SubscriptBox["\"\<\[Alpha]\>\"", "#"], ",", "Medium"}], "]"}], "&"}], 
+     ",", "6"}], "]"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<d2a1\>\"", "]"}], ",", 
+   RowBox[{"Array", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Style", "[", 
+       RowBox[{
+        SubscriptBox["\"\<\[Alpha]\>\"", "#"], ",", "Medium"}], "]"}], "&"}], 
+     ",", "3"}], "]"}], ",", 
+   RowBox[{"\"\<RowOrColumn\>\"", "\[Rule]", "Row"}]}], "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<a5\>\"", "]"}], "]"}], "\n", 
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<b5\>\"", "]"}], "]"}], "\n", 
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<c5\>\"", "]"}], "]"}], "\n", 
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<d5\>\"", "]"}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{"\"\<b7\>\"", ",", 
+   RowBox[{"\"\<Labels\>\"", "->", "False"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", "\"\<a5*e6*c6\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"DynkinDiagram", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", 
+      RowBox[{"#", ",", "6"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "1", ",", "2", ",", "3", ",", "\"\<n-2\>\"", ",", "\"\<n-1\>\"", ",", 
+       "\"\<n\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "4"}], "}"}]}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"\"\<b\>\"", ",", "\"\<e\>\""}], "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"\"\<b\>\"", ",", "7"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "2", ",", "3", ",", "\"\<n-1\>\"", ",", "\"\<n\>\"", ",", 
+     "\"\<n+m-1\>\"", ",", "\"\<n+m\>\""}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"3", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "6"}], "}"}]}], "}"}]}], "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Other Dynkin diagrams (loops etc)", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{"?", "DynkinDiagram"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"2", 
+        RowBox[{"-", "1"}], "0", "0"},
+       {
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "1"}], 
+        RowBox[{"-", "1"}]},
+       {"0", 
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "1"}]},
+       {"0", 
+        RowBox[{"-", "1"}], 
+        RowBox[{"-", "1"}], "2"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}], ",", 
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"2", 
+        RowBox[{"-", "1"}], "0", "0"},
+       {
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "2"}], 
+        RowBox[{"-", "1"}]},
+       {"0", 
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "1"}]},
+       {"0", 
+        RowBox[{"-", "1"}], 
+        RowBox[{"-", "1"}], "2"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}]}], 
+   "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"DynkinDiagram", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"\"\<Labels\>\"", "->", "False"}]}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"2", 
+        RowBox[{"-", "1"}], "0", "0"},
+       {
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "2"}], 
+        RowBox[{"-", "1"}]},
+       {"0", 
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "2"}]},
+       {"0", 
+        RowBox[{"-", "1"}], 
+        RowBox[{"-", "1"}], "2"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}], ",", 
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"2", 
+        RowBox[{"-", "2"}], "0", "0"},
+       {
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "2"}], 
+        RowBox[{"-", "2"}]},
+       {"0", 
+        RowBox[{"-", "1"}], "2", 
+        RowBox[{"-", "2"}]},
+       {"0", 
+        RowBox[{"-", "1"}], 
+        RowBox[{"-", "1"}], "2"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}]}], 
+   "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"DynkinDiagram", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"SimpleRootLengths", "@", "#"}]}], "]"}], "&"}], "[", 
+  RowBox[{"(", "\[NoBreak]", GridBox[{
+     {"2", 
+      RowBox[{"-", "1"}], "0", "0"},
+     {
+      RowBox[{"-", "3"}], "2", 
+      RowBox[{"-", "2"}], 
+      RowBox[{"-", "1"}]},
+     {"0", 
+      RowBox[{"-", "1"}], "2", 
+      RowBox[{"-", "3"}]},
+     {"0", 
+      RowBox[{"-", "1"}], 
+      RowBox[{"-", "1"}], "2"}
+    },
+    GridBoxAlignment->{
+     "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+      "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.7]}, 
+        Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.4]}, 
+        Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}], 
+  "]"}]], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Roots", "Section"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearRootCaches", "[", "]"}], " "}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Test Caches", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"SimpleRootLengths", "[", 
+    RowBox[{"CartanMatrix", "[", "\"\<d500\>\"", "]"}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"SimpleRootLengths", "[", 
+    RowBox[{"CartanMatrix", "[", "\"\<d500\>\"", "]"}], "]"}], ";"}], 
+  "]"}]}], "Input"],
+
+Cell["\<\
+note that all the time in the innerproduct is in evaluating the \
+SimpleRootLengths -- can I speed that up?\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"RootInnerProduct", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<d501\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "501"}], "]"}]}], "]"}], 
+   "[", 
+   RowBox[{
+    RowBox[{
+     SubscriptBox["\[Alpha]", "1"], "+", 
+     SubscriptBox["\[Alpha]", "3"], "+", 
+     SubscriptBox["\[Alpha]", "4"]}], ",", 
+    RowBox[{
+     SubscriptBox["\[Alpha]", "2"], "+", 
+     SubscriptBox["\[Alpha]", "4"]}]}], "]"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"RootInnerProduct", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<d501\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "501"}], "]"}]}], "]"}], 
+   "[", 
+   RowBox[{
+    RowBox[{
+     SubscriptBox["\[Alpha]", "1"], "+", 
+     SubscriptBox["\[Alpha]", "3"], "+", 
+     SubscriptBox["\[Alpha]", "4"]}], ",", 
+    RowBox[{
+     SubscriptBox["\[Alpha]", "2"], "+", 
+     SubscriptBox["\[Alpha]", "4"]}]}], "]"}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a20\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "20"}], "]"}], ",", 
+     RowBox[{"\"\<Method\>\"", "\[Rule]", "\"\<ALG\>\""}]}], "]"}], ";"}], 
+  "]"}], "\n", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a20\>\"", "]"}], ",", 
+     RowBox[{"\"\<Method\>\"", "\[Rule]", "\"\<SRS\>\""}]}], "]"}], ";"}], 
+  "]"}], "\n", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a20\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "20"}], "]"}], ",", 
+     RowBox[{"\"\<Method\>\"", "\[Rule]", "\"\<ALG\>\""}]}], "]"}], ";"}], 
+  "]"}], "\n", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a20\>\"", "]"}], ",", 
+     RowBox[{"\"\<Method\>\"", "\[Rule]", "\"\<SRS\>\""}]}], "]"}], ";"}], 
+  "]"}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Simple roots", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"?", "SimpleRootLengths"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Options", "[", "SimpleRootLengths", "]"}]], "Input"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", "\"\<a3*b4\>\"", "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], "]"}], "\n", 
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Long\>\""}], ",", 
+   RowBox[{"\"\<normTo\>\"", "\[Rule]", "2"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Short\>\""}], ",", 
+   RowBox[{"\"\<normTo\>\"", "\[Rule]", 
+    RowBox[{"1", "/", "2"}]}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Short\>\""}], ",", 
+   RowBox[{"\"\<normTo\>\"", "\[Rule]", "\[Kappa]"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Short\>\""}], ",", 
+   RowBox[{"\"\<normTo\>\"", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{
+      SubscriptBox["\[Kappa]", "1"], ",", 
+      SubscriptBox["\[Kappa]", "2"]}], "}"}]}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SimpleRootLengths", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+    RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Short\>\""}], ",", 
+    RowBox[{"\"\<normTo\>\"", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       SubscriptBox["\[Kappa]", "1"], ",", 
+       SubscriptBox["\[Kappa]", "2"], ",", 
+       SubscriptBox["\[Kappa]", "3"]}], "}"}]}]}], "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "nb", " ", "the", " ", "final", " ", "component", " ", "is", " ", "not", 
+    " ", "used"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Short\>\""}], ",", 
+   RowBox[{"\"\<normTo\>\"", "\[Rule]", 
+    RowBox[{"{", 
+     SubscriptBox["\[Kappa]", "1"], "}"}]}]}], "]"}]}], "Input"],
+
+Cell["Automatically generate root lengths...", "Text"],
+
+Cell[BoxData[
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<None\>\""}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox[
+   InterpretationBox[
+    SuperscriptBox[
+     RowBox[{"\[LeftBracketingBar]", 
+      SubscriptBox["\[Alpha]", "4"], "\[RightBracketingBar]"}], "2"],
+    SemisimpleLieAlg`Private`RootLengthSquared[4]], "2"], "//", 
+  "FullForm"}]], "Input"],
+
+Cell["Some ways to make things fail...", "Text"],
+
+Cell[BoxData[
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<al\>\""}]}], "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], "+", 
+   RowBox[{"StandardBasis", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", "1"}], "}"}], ",", "7"}], "]"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], "+", 
+   RowBox[{"StandardBasis", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", "7"}], "]"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"DynkinDiagram", "[", 
+  RowBox[{"{", 
+   RowBox[{"\"\<f\>\"", ",", "4"}], "}"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixForm", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<f4\>\"", "]"}], ",", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"SemisimpleLieAlg`Private`SimpleRootInnerProduct", "[", 
+        RowBox[{"CartanMatrix", "[", "\"\<f4\>\"", "]"}], "]"}], "[", 
+       RowBox[{"i", ",", "j"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "4"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"j", ",", "4"}], "}"}]}], "]"}]}], "}"}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"SemisimpleLieAlg`Private`SimpleRootInnerProduct", "[", 
+       RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], "]"}], "[", 
+      RowBox[{"#", ",", "#"}], "]"}], "&"}], "/@", 
+    RowBox[{"Range", "[", "7", "]"}]}], ")"}], "==", 
+  RowBox[{"SimpleRootLengths", "[", 
+   RowBox[{"CartanMatrix", "[", "\"\<a3*b4\>\"", "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"SemisimpleLieAlg`Private`SimpleRootInnerProduct", "[", 
+       RowBox[{
+        RowBox[{"CartanMatrix", "[", "\"\<e7\>\"", "]"}], ",", 
+        RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Long\>\""}], ",", 
+        RowBox[{"\"\<normTo\>\"", "\[Rule]", "2"}]}], "]"}], "[", 
+      RowBox[{"#", ",", "#"}], "]"}], "&"}], "/@", 
+    RowBox[{"Range", "[", "7", "]"}]}], ")"}], "==", 
+  RowBox[{"SimpleRootLengths", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<e7\>\"", "]"}], ",", 
+    RowBox[{"\"\<norm\>\"", "\[Rule]", "\"\<Long\>\""}], ",", 
+    RowBox[{"\"\<normTo\>\"", "\[Rule]", "2"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"RootInnerProduct", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<e7\>\"", "]"}], ",", 
+    RowBox[{"Array", "[", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[Alpha]", "#"], "&"}], ",", "7"}], "]"}]}], "]"}], "[", 
+  
+  RowBox[{
+   SubscriptBox["\[Alpha]", "2"], ",", 
+   RowBox[{
+    SubscriptBox["\[Alpha]", "1"], "+", 
+    SubscriptBox["\[Alpha]", "2"], "+", 
+    SubscriptBox["\[Alpha]", "3"]}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"SemisimpleLieAlg`Private`SimpleRootInnerProduct", "[", 
+     RowBox[{"CartanMatrix", "[", "\"\<e7\>\"", "]"}], "]"}], "[", 
+    RowBox[{"2", ",", "#"}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"1", ",", "2", ",", "3"}], "}"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"SimpleRootLengths", "[", 
+  RowBox[{"\"\<a2*b2\>\"", ",", 
+   RowBox[{"\"\<norm\>\"", "\[Rule]", "None"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"RootInnerProduct", "[", 
+     RowBox[{"\"\<a2*b2\>\"", ",", 
+      RowBox[{"Array", "[", 
+       RowBox[{
+        RowBox[{
+         SubscriptBox["r", "#"], "&"}], ",", "4"}], "]"}], ",", 
+      RowBox[{"\"\<norm\>\"", "\[Rule]", "None"}]}], "]"}], "[", 
+    RowBox[{"#", ",", "#"}], "]"}], "&"}], "/@", 
+  RowBox[{"Array", "[", 
+   RowBox[{
+    RowBox[{
+     SubscriptBox["r", "#"], "&"}], ",", "4"}], "]"}]}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Positive roots", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PositiveRoots", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<a2\>\"", "]"}], ",", 
+    RowBox[{"Array", "[", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[Alpha]", "#"], "&"}], ",", "2"}], "]"}], ",", 
+    RowBox[{"\"\<Debug\>\"", "\[Rule]", "True"}], ",", 
+    RowBox[{"Method", "\[Rule]", "\"\<ALG\>\""}]}], "]"}], "//", 
+  "Column"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PositiveRoots", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<a2\>\"", "]"}], ",", 
+    RowBox[{"Array", "[", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[Alpha]", "#"], "&"}], ",", "2"}], "]"}], ",", 
+    RowBox[{"\"\<Debug\>\"", "\[Rule]", "True"}], ",", 
+    RowBox[{"Method", "\[Rule]", "\"\<SRS\>\""}]}], "]"}], "//", 
+  "Column"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ClearRootCaches", "[", "]"}], ";", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a2\>\"", "]"}], ",", 
+     RowBox[{"\"\<Debug\>\"", "\[Rule]", "True"}]}], "]"}], "//", 
+   "Column"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PositiveRoots", "[", "\"\<a2\>\"", "]"}], "//", 
+  "Column"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"PositiveRoots", "[", 
+  RowBox[{"\"\<a2\>\"", ",", 
+   RowBox[{"Method", "\[Rule]", "\"\<ALG\>\""}]}], "]"}]], "Input"],
+
+Cell["Compare the two methods...", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a21\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "21"}], "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<ALG\>\""}]}], "]"}], ";"}], 
+  "]"}], "\n", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a21\>\"", "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<SRS\>\""}]}], "]"}], ";"}], 
+  "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<e8\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "8"}], "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<ALG\>\""}]}], "]"}], ";"}], 
+  "]"}], "\n", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<e8\>\"", "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<SRS\>\""}]}], "]"}], ";"}], 
+  "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PositiveRoots", "[", 
+   RowBox[{"\"\<a3*a3\>\"", ",", 
+    RowBox[{"Array", "[", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[Alpha]", "#"], "&"}], ",", "6"}], "]"}]}], "]"}], "//",
+   "Column"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PositiveRoots", "[", 
+   RowBox[{"CartanMatrix", "[", "\"\<a3*a3\>\"", "]"}], "]"}], "//", 
+  "Column"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"PositiveRoots", "[", 
+   RowBox[{
+    RowBox[{"CartanMatrix", "[", "\"\<e6\>\"", "]"}], ",", 
+    RowBox[{"Array", "[", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["\[Alpha]", "#"], "&"}], ",", "6"}], "]"}]}], "]"}], "//",
+   "Column"}], "\[IndentingNewLine]", 
+ RowBox[{"%", "==", 
+  RowBox[{"Column", "@", 
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<e6\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "6"}], "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<ALG\>\""}]}], "]"}]}]}]}], "Input"],
+
+Cell["\<\
+Should I check to see that it really is a finite Lie algebra CartanMatrixQ? \
+Is it worth the overhead?\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<e9\>\"", "]"}], ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "9"}], "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<ALG\>\""}]}], "]"}], ";"}], 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<e9\>\"", "]"}], ",", 
+     RowBox[{"Method", "\[Rule]", "\"\<SRS\>\""}]}], "]"}], ";"}], 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{"Column", "@", 
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a3\>\"", "]"}], ",", 
+     RowBox[{"\"\<maxLevel\>\"", "\[Rule]", "1"}]}], "]"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{"Column", "@", 
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a3\>\"", "]"}], ",", 
+     RowBox[{"\"\<maxLevel\>\"", "\[Rule]", "2"}]}], "]"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{"Column", "@", 
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a3\>\"", "]"}], ",", 
+     RowBox[{"\"\<maxLevel\>\"", "\[Rule]", "3"}]}], "]"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{"Column", "@", 
+   RowBox[{"PositiveRoots", "[", 
+    RowBox[{
+     RowBox[{"CartanMatrix", "[", "\"\<a4\>\"", "]"}], ",", 
+     RowBox[{"\"\<maxLevel\>\"", "\[Rule]", "3"}]}], "]"}]}], 
+  "]"}]], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Weights", "Section"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["FundamentalWeights", "Subsection"],
+
+Cell[BoxData[{
+ RowBox[{"FundamentalWeights", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "}"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"FundamentalWeights", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b"}], "}"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"FundamentalWeights", "[", "\"\<b2\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PrimitiveWeights", "[", "\"\<A20\>\"", "]"}], "\[Equal]", 
+  RowBox[{"FundamentalWeights", "[", "\"\<A20\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"FundamentalWeights", "[", 
+  RowBox[{"\"\<a3e5\>\"", ",", 
+   RowBox[{"Array", "[", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Alpha]", "#"], "&"}], ",", "8"}], "]"}]}], 
+  "]"}]], "Input"],
+
+Cell["\<\
+using named algebras as opposed to Cartan matrices is a lot faster, since it \
+uses CartanMatrixInverse[name].\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"FundamentalWeights", "[", "\"\<a300e8\>\"", "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"FundamentalWeights", "[", 
+    RowBox[{"CartanMatrix", "[", "\"\<a300e8\>\"", "]"}], "]"}], ";"}], 
+  "]"}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["WeylReflection", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeylReflection", "[", 
+   RowBox[{"\"\<A3\>\"", ",", "1"}], "]"}], ".", 
+  RowBox[{"WeylReflection", "[", 
+   RowBox[{"\"\<A3\>\"", ",", "2"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"IdentityMatrix", "[", "3", "]"}], "\[Equal]", 
+    RowBox[{
+     RowBox[{"WeylReflection", "[", 
+      RowBox[{"\"\<A3\>\"", ",", "i"}], "]"}], ".", 
+     RowBox[{"WeylReflection", "[", 
+      RowBox[{"\"\<A3\>\"", ",", "i"}], "]"}]}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"i", ",", "1", ",", "3"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"sr", " ", "=", " ", 
+  RowBox[{"SimpleReflections", "[", "\"\<A2\>\"", "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeylOrbit", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}], ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeylOrbit", "[", 
+  RowBox[{"\"\<A3\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["WeylVector", "Subsection"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeylVector", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "}"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"2", 
+   RowBox[{"WeylVector", "[", 
+    RowBox[{"\"\<A5\>\"", ",", 
+     RowBox[{"Array", "[", 
+      RowBox[{
+       RowBox[{
+        SubscriptBox["\[Alpha]", "#"], "&"}], ",", "5"}], "]"}]}], "]"}]}], "//",
+   "Expand"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"WeylVector", "[", "type", "]"}], ".", 
+    RowBox[{"CartanMatrix", "[", "type", "]"}]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"type", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<A3\>\"", ",", "\"\<A6\>\"", ",", "\"\<b4\>\"", ",", "\"\<c5e7\>\"",
+        ",", "\"\<f4g2\>\""}], "}"}]}], "}"}]}], "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["WeylDimension", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"WeylDimension", "[", 
+  RowBox[{"\"\<a2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"m1", ",", "m2"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeylDimension", "[", 
+  RowBox[{"\"\<a3\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"m1", ",", "m2", ",", "m3"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"WeylDimension", "[", 
+  RowBox[{"\"\<g2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"m1", ",", "m2"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"%", "/.", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"m1", "\[Rule]", "1"}], ",", 
+      RowBox[{"m2", "\[Rule]", "0"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"m1", "\[Rule]", "0"}], ",", 
+      RowBox[{"m2", "\[Rule]", "1"}]}], "}"}]}], "}"}]}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["WeightSystem - no mults", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"WeightSystem", "[", 
+  RowBox[{"\"\<A1\>\"", ",", 
+   RowBox[{"{", "5", "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeightSystem", "[", 
+  RowBox[{"\"\<A2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0"}], "}"}], ",", 
+   RowBox[{"Debug", "\[Rule]", "True"}]}], "]"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"WeightSystem", "[", 
+  RowBox[{"\"\<A2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"WeightSystem", "[", 
+  RowBox[{"\"\<A2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     SubscriptBox["\[Alpha]", "1"], ",", 
+     SubscriptBox["\[Alpha]", "2"]}], "}"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"WeightSystem", "[", 
+  RowBox[{"\"\<A2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"WeightSystem", "[", 
+  RowBox[{"\"\<A2\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     SubscriptBox["\[Alpha]", "1"], ",", 
+     SubscriptBox["\[Alpha]", "2"]}], "}"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<A2\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1"}], "}"}]}], "]"}], "//", "SpindleForm"}]], "Input"],
+
+Cell["Only two orbits:", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Union", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"WeylOrbit", "[", 
+     RowBox[{"\"\<A2\>\"", ",", "#", ",", "100"}], "]"}], "&"}], "/@", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"\"\<A2\>\"", ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}]}], "]"}], ",", "1"}], "]"}]}], 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"#", ".", 
+    RowBox[{"CartanMatrixInverse", "[", "\"\<A2\>\"", "]"}]}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", 
+      RowBox[{"-", "2"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "2"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "2"}], ",", "1"}], "}"}]}], "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SortBy", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", 
+       RowBox[{"-", "2"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", 
+       RowBox[{"-", "1"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "2"}], ",", "1"}], "}"}]}], "}"}], ",", 
+   RowBox[{
+    RowBox[{"-", 
+     RowBox[{"Min", "[", "#", "]"}]}], "&"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<A3\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "0"}], "}"}]}], "]"}], "//", 
+  "Grid"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<A3\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "1"}], "}"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<E8\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", 
+       "0"}], "}"}]}], "]"}], ";"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<E8\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", 
+       "1"}], "}"}]}], "]"}], ";"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeylDimension", "[", 
+  RowBox[{"\"\<E8\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", 
+     "1"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Grid", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"WeightSystem", "[", 
+         RowBox[{"\"\<B3\>\"", ",", "i"}], "]"}], "//", "SpindleForm"}], ",", 
+       
+       RowBox[{"{", 
+        RowBox[{"i", ",", 
+         RowBox[{"IdentityMatrix", "[", "3", "]"}]}], "}"}]}], "]"}], "}"}], 
+    ",", 
+    RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}], "//", 
+  "TraditionalForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Grid", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"WeightSystem", "[", 
+         RowBox[{"\"\<F4\>\"", ",", "i"}], "]"}], "//", "SpindleForm"}], ",", 
+       
+       RowBox[{"{", 
+        RowBox[{"i", ",", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", "0", ",", "0", ",", "1"}], "}"}]}], "}"}]}], 
+        "}"}]}], "]"}], "}"}], ",", 
+    RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}], "//", 
+  "TraditionalForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<D5\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0", ",", "0", ",", "0", ",", "1"}], "}"}]}], "]"}], "//",
+   "SpindleForm"}]], "Input"],
+
+Cell["\<\
+Note: in the current implementation Method->\"SRS\" is actually implemented \
+via the Dynkin rep.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<F4\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}], ",", "\"\<SRS\>\""}],
+    "]"}], "==", 
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<F4\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}], ",", 
+    RowBox[{"Method", "\[Rule]", "\"\<SRS\>\""}]}], "]"}]}]], "Input"],
+
+Cell["\<\
+Here we can see how many simple roots have to be subtracted from the highest \
+weight to get each weight:\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"type", "=", "\"\<F4\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}], ".", 
+  RowBox[{"Inverse", "[", 
+   RowBox[{"CartanMatrix", "[", "type", "]"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"type", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}], ",", "\"\<SRS\>\""}],
+    "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Grid", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"SpindleForm", "/@", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"WeightSystem", "[", 
+         RowBox[{"type", ",", 
+          RowBox[{"{", 
+           RowBox[{"1", ",", "0", ",", "0", ",", "0"}], "}"}]}], "]"}], ",", 
+        "%", ",", "\"\<  \>\"", ",", 
+        RowBox[{"Map", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"-", "#"}], "+", "%%"}], "&"}], ",", "%", ",", 
+          RowBox[{"{", "2", "}"}]}], "]"}]}], "}"}]}], "}"}], ",", 
+    RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}], "//", 
+  "TraditionalForm"}], "\[IndentingNewLine]", 
+ RowBox[{"type", "=."}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["WeightSystem - with mults", "Subsection"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<a2\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0"}], "}"}], ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "False"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<a2\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0"}], "}"}], ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<a2\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1"}], "}"}], ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeightMults", "[", 
+  RowBox[{"\"\<a2\>\"", ",", 
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<a2\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}], "]"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<d3\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "1"}], "}"}], ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "True"}], ",", 
+    RowBox[{"\"\<Debug\>\"", "\[Rule]", "True"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<a2\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", "2"}], "}"}], ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "True"}], ",", 
+    RowBox[{"\"\<Debug\>\"", "\[Rule]", "True"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"\"\<a3\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "0"}], "}"}], ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "True"}], ",", 
+    RowBox[{"\"\<Debug\>\"", "\[Rule]", "True"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["DominantWeights", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{"Flatten", "[", 
+  RowBox[{
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<A2\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}], "]"}], ",", "1"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"ws", "=", 
+  RowBox[{"Flatten", "[", 
+   RowBox[{
+    RowBox[{"WeightSystem", "[", 
+     RowBox[{"\"\<A2\>\"", ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1"}], "}"}], ",", "\"\<SRS\>\""}], "]"}], ",", 
+    "1"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"SRSSort", "[", 
+  RowBox[{"\"\<A2\>\"", ",", 
+   RowBox[{"Reverse", "@", "ws"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynOrderedQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", 
+     RowBox[{"-", "1"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynSort", "@", "ws"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynOrderedQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", 
+     RowBox[{"-", "1"}]}], "}"}]}], "]"}]], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graphs - Roots and Weights", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Roots: Rank 2", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"GraphRoots2D", "[", 
+    RowBox[{"#", ",", "\"\<\[Alpha]\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"Blue", ",", "Bold"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"RotationMatrix", "[", "0", "]"}], ".", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}]}]}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{
+   "\"\<a2\>\"", ",", "\"\<b2\>\"", ",", "\"\<c2\>\"", ",", "\"\<d2\>\"", 
+    ",", "\"\<g2\>\""}], "}"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"GraphRoots2D", "[", "\"\<a3\>\"", "]"}]], "Input"],
+
+Cell["\<\
+Note, no check is made on the supplied Cartan matrix other than it has \
+integer values (and the checks in the other internal routines that are used):\
+\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"GraphRoots2D", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "2"}], "}"}]}], "}"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"GraphRoots2D", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "1"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "5"}], ",", "3"}], "}"}]}], "}"}], "]"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Roots: Rank 3", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"GraphRoots3D", "[", "type", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"type", ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<A3\>\"", ",", "\"\<B3\>\"", ",", "\"\<C3\>\""}], "}"}]}], 
+    "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"GraphRoots3D", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", 
+      RowBox[{"-", "3"}], ",", "0"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "2", ",", 
+      RowBox[{"-", "3"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", 
+      RowBox[{"-", "1"}], ",", "3"}], "}"}]}], "}"}], "]"}]], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["others", "Section"]], "Section"],
+
+Cell[BoxData["reload"], "Input"],
+
+Cell[CellGroupData[{
+
+Cell["Check metric for Dynkin rep.", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell["\"A3\", \[CapitalLambda] = {1, 0, 1}", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"type", "=", "\"\<A3\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CapitalLambda]", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "1"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sRts", "=", 
+   RowBox[{"Array", "[", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Alpha]", "#"], "&"}], ",", "3"}], "]"}]}], 
+  ";"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"wss", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]", ",", "\"\<SRS\>\""}], "]"}], 
+     ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"wsd", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]"}], "]"}], ",", "1"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"wsa", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]", ",", "sRts"}], "]"}], ",", 
+     "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"d", "=", 
+  RowBox[{"Length", "@", "%"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"G", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"CartanMatrixInverse", "[", "type", "]"}], ".", 
+    RowBox[{"DiagonalMatrix", "[", 
+     RowBox[{"SimpleRootLengths", "[", "type", "]"}], "]"}]}], "/", 
+   "2"}]}], "\[IndentingNewLine]", 
+ RowBox[{"G", "\[Equal]", 
+  RowBox[{"G", "\[Transpose]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"RootInnerProduct", "[", 
+       RowBox[{"type", ",", "sRts"}], "]"}], "[", 
+      RowBox[{
+       RowBox[{"wsa", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+       ",", 
+       RowBox[{
+       "wsa", "\[LeftDoubleBracket]", "j", "\[RightDoubleBracket]"}]}], "]"}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "d"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "d"}], "}"}]}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"wsd", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+      ".", "G", ".", 
+      RowBox[{"wsd", "\[LeftDoubleBracket]", "j", "\[RightDoubleBracket]"}]}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "d"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "d"}], "}"}]}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"%", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+  "\[Equal]", 
+  RowBox[{
+  "%%", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\"B3\", \[CapitalLambda] = {1, 1, 1}", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"type", "=", "\"\<B3\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CapitalLambda]", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "1", ",", "1"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sRts", "=", 
+   RowBox[{"Array", "[", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Alpha]", "#"], "&"}], ",", "3"}], "]"}]}], 
+  ";"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"wss", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]", ",", "\"\<SRS\>\""}], "]"}], 
+     ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"wsd", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]"}], "]"}], ",", "1"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"wsa", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]", ",", "sRts"}], "]"}], ",", 
+     "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"d", "=", 
+  RowBox[{"Length", "@", "%"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"G", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"CartanMatrixInverse", "[", "type", "]"}], ".", 
+    RowBox[{"DiagonalMatrix", "[", 
+     RowBox[{"SimpleRootLengths", "[", "type", "]"}], "]"}]}], "/", 
+   "2"}]}], "\[IndentingNewLine]", 
+ RowBox[{"G", "\[Equal]", 
+  RowBox[{"G", "\[Transpose]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"RootInnerProduct", "[", 
+       RowBox[{"type", ",", "sRts"}], "]"}], "[", 
+      RowBox[{
+       RowBox[{"wsa", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+       ",", 
+       RowBox[{
+       "wsa", "\[LeftDoubleBracket]", "j", "\[RightDoubleBracket]"}]}], "]"}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "d"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "d"}], "}"}]}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"wsd", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+      ".", "G", ".", 
+      RowBox[{"wsd", "\[LeftDoubleBracket]", "j", "\[RightDoubleBracket]"}]}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "d"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "d"}], "}"}]}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"%", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+  "\[Equal]", 
+  RowBox[{
+  "%%", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["\"E6\", \[CapitalLambda] = {1, 0, 1,0,0,0}", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"type", "=", "\"\<E6\>\""}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"\[CapitalLambda]", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"sRts", "=", 
+   RowBox[{"Array", "[", 
+    RowBox[{
+     RowBox[{
+      SubscriptBox["\[Alpha]", "#"], "&"}], ",", "6"}], "]"}]}], 
+  ";"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"wss", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]", ",", "\"\<SRS\>\""}], "]"}], 
+     ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"wsd", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]"}], "]"}], ",", "1"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"wsa", "=", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"WeightSystem", "[", 
+      RowBox[{"type", ",", "\[CapitalLambda]", ",", "sRts"}], "]"}], ",", 
+     "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"d", "=", 
+  RowBox[{"Length", "@", "%"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"G", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"CartanMatrixInverse", "[", "type", "]"}], ".", 
+    RowBox[{"DiagonalMatrix", "[", 
+     RowBox[{"SimpleRootLengths", "[", "type", "]"}], "]"}]}], "/", 
+   "2"}]}], "\[IndentingNewLine]", 
+ RowBox[{"G", "\[Equal]", 
+  RowBox[{"G", "\[Transpose]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"RootInnerProduct", "[", 
+       RowBox[{"type", ",", "sRts"}], "]"}], "[", 
+      RowBox[{
+       RowBox[{"wsa", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+       ",", 
+       RowBox[{
+       "wsa", "\[LeftDoubleBracket]", "j", "\[RightDoubleBracket]"}]}], "]"}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "d", ",", "500"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "1", ",", "i", ",", "100"}], "}"}]}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"wsd", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}], 
+      ".", "G", ".", 
+      RowBox[{"wsd", "\[LeftDoubleBracket]", "j", "\[RightDoubleBracket]"}]}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "d", ",", "500"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "1", ",", "i", ",", "100"}], "}"}]}], "]"}], ";"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"%", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+  "\[Equal]", 
+  RowBox[{
+  "%%", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "Input"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Multiplicity tests....", "Subsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"type", "=", "\"\<G2\>\""}], ";", " ", 
+  RowBox[{"M", "=", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "0"}], "}"}]}], ";", 
+  RowBox[{"wts", "=", 
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"type", ",", "M"}], "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MessageDialog", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Dynamic", "@", 
+      RowBox[{"With", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"A", "=", 
+           RowBox[{"CartanMatrix", "[", "type", "]"}]}], ",", 
+          RowBox[{"Ai", "=", 
+           RowBox[{"CartanMatrixInverse", "[", "type", "]"}]}]}], "}"}], ",", 
+        
+        RowBox[{"Column", "[", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"Grid", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                  "\"\<SRS\>\"", ",", "\"\<M\>\"", ",", "\"\<DYN\>\""}], 
+                  "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"SpindleForm", "@", "#"}], ",", 
+                   RowBox[{"Row", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"M", ".", "Ai"}], ",", "\"\<  :  \>\"", ",", 
+                    "M"}], "}"}], "]"}], ",", 
+                   RowBox[{"SpindleForm", "@", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"#", ".", "A"}], "&"}], ",", "#", ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}]}]}], "}"}]}], "}"}], ",", 
+               RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}], "&"}], "@", 
+            RowBox[{"PositiveRoots", "[", "type", "]"}]}], ",", "\"\<\>\"", 
+           ",", "\[IndentingNewLine]", 
+           RowBox[{"With", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"srs", "=", 
+               RowBox[{"Map", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"#", ".", "Ai"}], "&"}], ",", "wts", ",", 
+                 RowBox[{"{", "2", "}"}]}], "]"}]}], "}"}], ",", 
+             RowBox[{"Grid", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{
+                  "\"\<SRS\>\"", ",", "\"\<M-SRS\>\"", ",", "\"\<DYN\>\""}], 
+                  "}"}], ",", 
+                 RowBox[{"SpindleForm", "/@", 
+                  RowBox[{"{", 
+                   RowBox[{"srs", ",", 
+                    RowBox[{"Map", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "#"}], "+", 
+                    RowBox[{"srs", "\[LeftDoubleBracket]", 
+                    RowBox[{"1", ",", "1"}], "\[RightDoubleBracket]"}]}], 
+                    "&"}], ",", "srs", ",", 
+                    RowBox[{"{", "2", "}"}]}], "]"}], ",", "wts"}], "}"}]}]}],
+                 "}"}], ",", 
+               RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}]}], "]"}]}], "}"}],
+          "]"}]}], "]"}]}], "//", "TraditionalForm"}], ",", 
+    RowBox[{"WindowTitle", "\[Rule]", 
+     RowBox[{"Dynamic", "@", 
+      RowBox[{"StringJoin", "[", 
+       RowBox[{"ToString", "/@", 
+        RowBox[{"{", 
+         RowBox[{"type", ",", "\"\<  | \>\"", ",", "M"}], "}"}]}], "]"}]}]}], 
+    ",", 
+    RowBox[{"WindowSize", "\[Rule]", "All"}]}], "]"}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"WeightMults", "[", 
+  RowBox[{
+   RowBox[{"CartanMatrix", "@", "type"}], ",", "wts", ",", "True"}], 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"WeightSystem", "[", 
+   RowBox[{"type", ",", "M", ",", 
+    RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}], "//", 
+  "SpindleForm"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["E7 \[Rule] E6", "Subsection"],
+
+Cell["\<\
+http://www.physicsforums.com/showthread.php?p=2609024#post2609024\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["init", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", "\"\<E6\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"E6dim", "[", 
+   RowBox[{"{", 
+    RowBox[{
+    "m1_", ",", "m2_", ",", "m3_", ",", "m4_", ",", "m5_", ",", "m6_"}], 
+    "}"}], "]"}], "=", 
+  RowBox[{
+   RowBox[{"WeylDimension", "[", 
+    RowBox[{"\"\<E6\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6"}], 
+      "}"}]}], "]"}], "//", "FullSimplify"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SortBy", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Row", "[", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+           "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6"}], 
+           "}"}], ",", "\"\< : \>\"", ",", 
+          RowBox[{"E6dim", "[", 
+           RowBox[{"{", 
+            RowBox[{
+            "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6"}], 
+            "}"}], "]"}]}], "}"}], "]"}], ",", 
+       RowBox[{"Evaluate", "[", 
+        RowBox[{"Sequence", "@@", 
+         RowBox[{"Thread", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+             "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6"}], 
+             "}"}], ",", "0", ",", "1"}], "}"}], "]"}]}], "]"}]}], "]"}], "//",
+      "Flatten"}], ",", 
+    RowBox[{
+     RowBox[{"#", "\[LeftDoubleBracket]", 
+      RowBox[{"1", ",", 
+       RowBox[{"-", "1"}]}], "\[RightDoubleBracket]"}], "&"}]}], "]"}], "//", 
+  "Column"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"E6Wts27", "=", 
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<E6\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0"}], "}"}], 
+     ",", 
+     RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"E6Wts27b", "=", 
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<E6\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0"}], "}"}], 
+     ",", 
+     RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"E6Wts78", "=", 
+    RowBox[{"WeightSystem", "[", 
+     RowBox[{"\"\<E6\>\"", ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1"}], "}"}],
+       ",", 
+      RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}]}], ";"}], 
+  " "}]}], "Input"],
+
+Cell["the 78 rep is the adjoint:", "Text"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Complement", "[", 
+    RowBox[{
+     RowBox[{"Flatten", "[", 
+      RowBox[{"E6Wts78", ",", "1"}], "]"}], ",", "#", ",", 
+     RowBox[{"-", "#"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0"}], "}"}],
+       "}"}]}], "]"}], "&"}], "@", 
+  RowBox[{"Map", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"#", ".", 
+      RowBox[{"CartanMatrix", "[", "\"\<E6\>\"", "]"}]}], "&"}], ",", 
+    RowBox[{"Flatten", "[", 
+     RowBox[{
+      RowBox[{"PositiveRoots", "[", "\"\<E6\>\"", "]"}], ",", "1"}], "]"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"2", "#"}], "+", "6"}], ")"}], "&"}], "@", 
+  RowBox[{"Length", "@", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"PositiveRoots", "[", "\"\<E6\>\"", "]"}], ",", "1"}], 
+    "]"}]}]}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"DynkinDiagram", "[", "\"\<E7\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"E7dim", "[", 
+   RowBox[{"{", 
+    RowBox[{
+    "m1_", ",", "m2_", ",", "m3_", ",", "m4_", ",", "m5_", ",", "m6_", ",", 
+     "m7_"}], "}"}], "]"}], "=", 
+  RowBox[{
+   RowBox[{"WeylDimension", "[", 
+    RowBox[{"\"\<E7\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6", ",", 
+       "m7"}], "}"}]}], "]"}], "//", "FullSimplify"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SortBy", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Row", "[", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+           "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6", ",", 
+            "m7"}], "}"}], ",", "\"\< : \>\"", ",", 
+          RowBox[{"E7dim", "[", 
+           RowBox[{"{", 
+            RowBox[{
+            "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6", ",", 
+             "m7"}], "}"}], "]"}]}], "}"}], "]"}], ",", 
+       RowBox[{"Evaluate", "[", 
+        RowBox[{"Sequence", "@@", 
+         RowBox[{"Thread", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+             "m1", ",", "m2", ",", "m3", ",", "m4", ",", "m5", ",", "m6", ",",
+               "m7"}], "}"}], ",", "0", ",", "1"}], "}"}], "]"}]}], "]"}]}], 
+      "]"}], "//", "Flatten"}], ",", 
+    RowBox[{
+     RowBox[{"#", "\[LeftDoubleBracket]", 
+      RowBox[{"1", ",", 
+       RowBox[{"-", "1"}]}], "\[RightDoubleBracket]"}], "&"}]}], "]"}], "//", 
+  "Column"}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Fundamental rep of E7", "Subsubsection"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"E7Wts56", "=", 
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<E7\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0"}], 
+      "}"}], ",", 
+     RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Flatten", "[", 
+   RowBox[{"E7Wts56", ",", "1"}], "]"}], "//", "Length"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"E7Wts56", "//", "SpindleForm"}], "//", 
+  RowBox[{
+   RowBox[{"Magnify", "[", 
+    RowBox[{"#", ",", ".8"}], "]"}], "&"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"E7Wts56SRS", "=", 
+     RowBox[{"Map", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"2", 
+         RowBox[{"#", ".", 
+          RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}]}], "&"}], 
+       ",", "E7Wts56", ",", 
+       RowBox[{"{", "2", "}"}]}], "]"}]}], ")"}], "//", "SpindleForm"}], "//", 
+  RowBox[{
+   RowBox[{"Magnify", "[", 
+    RowBox[{"#", ",", ".8"}], "]"}], "&"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"2", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"#", ".", 
+          RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}], ")"}], 
+        "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}]}], "&"}], ",", 
+     "E7Wts56", ",", 
+     RowBox[{"{", "2", "}"}]}], "]"}], "//", "SpindleForm"}], "//", 
+  RowBox[{
+   RowBox[{"Magnify", "[", 
+    RowBox[{"#", ",", ".8"}], "]"}], "&"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Flatten", "[", 
+  RowBox[{"Map", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"2", 
+        RowBox[{"#", ".", 
+         RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}]}], ")"}], 
+      "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "&"}], ",", 
+    "E7Wts56", ",", 
+    RowBox[{"{", "2", "}"}]}], "]"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"#", ",", 
+     RowBox[{"Count", "[", 
+      RowBox[{"%", ",", "#"}], "]"}]}], "}"}], "&"}], "/@", 
+  RowBox[{"Union", "[", "%", "]"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Select", "[", 
+  RowBox[{
+   RowBox[{"Flatten", "[", 
+    RowBox[{"E7Wts56", ",", "1"}], "]"}], ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Abs", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"2", 
+         RowBox[{"#", ".", 
+          RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}]}], ")"}], 
+       "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "]"}], 
+     "\[Equal]", "3"}], "&"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Delete", "[", 
+    RowBox[{"#", ",", "6"}], "]"}], "&"}], "/@", "%"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Delete", "[", 
+    RowBox[{"#", ",", "6"}], "]"}], "&"}], "/@", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"E7Wts56", ",", "1"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"2", 
+         RowBox[{"#", ".", 
+          RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}]}], ")"}], 
+       "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "\[Equal]", 
+      "1"}], "&"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Cases", "[", 
+  RowBox[{"%", ",", 
+   RowBox[{"{", 
+    RowBox[{"__", "?", "NonNegative"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Complement", "[", 
+  RowBox[{"%%", ",", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"E6Wts27b", ",", "1"}], "]"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Delete", "[", 
+    RowBox[{"#", ",", "6"}], "]"}], "&"}], "/@", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"E7Wts56", ",", "1"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"2", 
+         RowBox[{"#", ".", 
+          RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}]}], ")"}], 
+       "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "\[Equal]", 
+      RowBox[{"-", "1"}]}], "&"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Cases", "[", 
+  RowBox[{"%", ",", 
+   RowBox[{"{", 
+    RowBox[{"__", "?", "NonNegative"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Complement", "[", 
+  RowBox[{"%%", ",", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"E6Wts27", ",", "1"}], "]"}]}], "]"}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["The adjoint representation of E7:", "Subsubsection"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"#", ",", 
+     RowBox[{
+      RowBox[{"2", "#"}], "+", "7"}]}], "}"}], "&"}], "@", 
+  RowBox[{"Length", "@", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"PositiveRoots", "[", "\"\<E7\>\"", "]"}], ",", "1"}], 
+    "]"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"E7Wts133", "=", 
+   RowBox[{"WeightSystem", "[", 
+    RowBox[{"\"\<E7\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0"}], 
+      "}"}], ",", 
+     RowBox[{"Multiplicity", "\[Rule]", "True"}]}], "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Length", "/@", "E7Wts133"}], "//", "Total"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"E7Wts133", "//", "SpindleForm"}], "//", 
+  RowBox[{
+   RowBox[{"Magnify", "[", 
+    RowBox[{"#", ",", ".7"}], "]"}], "&"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"E7Wts133SRS", "=", 
+     RowBox[{"Map", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"#", ".", 
+         RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}], "&"}], 
+       ",", "E7Wts133", ",", 
+       RowBox[{"{", "2", "}"}]}], "]"}]}], ")"}], "//", "SpindleForm"}], "//", 
+  RowBox[{
+   RowBox[{"Magnify", "[", 
+    RowBox[{"#", ",", ".7"}], "]"}], "&"}]}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{"Flatten", "[", 
+  RowBox[{"Map", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"#", ".", 
+        RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}], ")"}], 
+      "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "&"}], ",", 
+    "E7Wts133", ",", 
+    RowBox[{"{", "2", "}"}]}], "]"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Count", "[", 
+    RowBox[{"%", ",", "#"}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"1", ",", "0", ",", 
+    RowBox[{"-", "1"}]}], "}"}]}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Delete", "[", 
+    RowBox[{"#", ",", "6"}], "]"}], "&"}], "/@", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"E7Wts133", ",", "1"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"#", ".", 
+         RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}], ")"}], 
+       "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "\[Equal]", 
+      "1"}], "&"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Cases", "[", 
+  RowBox[{"%", ",", 
+   RowBox[{"{", 
+    RowBox[{"__", "?", "NonNegative"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Complement", "[", 
+  RowBox[{"%%", ",", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"E6Wts27", ",", "1"}], "]"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Delete", "[", 
+    RowBox[{"#", ",", "6"}], "]"}], "&"}], "/@", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"E7Wts133", ",", "1"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"#", ".", 
+         RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}], ")"}], 
+       "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "\[Equal]", 
+      RowBox[{"-", "1"}]}], "&"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Cases", "[", 
+  RowBox[{"%", ",", 
+   RowBox[{"{", 
+    RowBox[{"__", "?", "NonNegative"}], "}"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Complement", "[", 
+  RowBox[{"%%", ",", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"E6Wts27b", ",", "1"}], "]"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"Delete", "[", 
+    RowBox[{"#", ",", "6"}], "]"}], "&"}], "/@", 
+  RowBox[{"Select", "[", 
+   RowBox[{
+    RowBox[{"Flatten", "[", 
+     RowBox[{"E7Wts133", ",", "1"}], "]"}], ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"#", ".", 
+         RowBox[{"CartanMatrixInverse", "[", "\"\<E7\>\"", "]"}]}], ")"}], 
+       "\[LeftDoubleBracket]", "6", "\[RightDoubleBracket]"}], "\[Equal]", 
+      "0"}], "&"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Union", "[", 
+  RowBox[{"Cases", "[", 
+   RowBox[{"%", ",", 
+    RowBox[{"{", 
+     RowBox[{"__", "?", "NonNegative"}], "}"}]}], "]"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Complement", "[", 
+  RowBox[{"%%", ",", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{"E6Wts78", ",", "1"}], "]"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[""], "Input"]
+}, Closed]]
+}, Closed]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["play", "Subsubtitle"],
+
+Cell[CellGroupData[{
+
+Cell["Positive definite Cartan matrices...", "Subsection"],
+
+Cell[TextData[{
+ "follows from the fact that its ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"2", " ", 
+    RowBox[{"(", 
+     RowBox[{
+      SubscriptBox["\[Alpha]", "i"], ",", 
+      SubscriptBox["\[Alpha]", "j"]}], ")"}], 
+    SuperscriptBox[
+     SubscriptBox["D", "j"], 
+     RowBox[{"-", "1"}]]}], TraditionalForm]]],
+ " where D is a positive definite diagonal matrix and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{
+     SubscriptBox["\[Alpha]", "i"], ",", 
+     SubscriptBox["\[Alpha]", "j"]}], ")"}], TraditionalForm]]],
+ " is a Gram matrix.   ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       SuperscriptBox["\[Lambda]", "i"], "(", 
+       RowBox[{
+        SubscriptBox["\[Alpha]", "i"], ",", 
+        SubscriptBox["\[Alpha]", "j"]}], ")"}], 
+      SuperscriptBox["\[Lambda]", "j"]}], "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"\[Lambda]", ",", "\[Lambda]"}], ")"}], ">", "0"}]}], ",", 
+    "  ", 
+    RowBox[{"\[ForAll]", "  ", 
+     RowBox[{"\[Lambda]", "\[NotEqual]", "0"}]}]}], TraditionalForm]]],
+ " "
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Flatten", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"And", "@@", 
+      RowBox[{"Thread", "[", 
+       RowBox[{
+        RowBox[{"Eigenvalues", "[", 
+         RowBox[{
+          RowBox[{"CartanMatrix", "[", 
+           RowBox[{"type", ",", "r"}], "]"}], "//", "N"}], "]"}], ">", "0"}], 
+       "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"type", ",", 
+       RowBox[{"{", 
+        RowBox[{"\"\<a\>\"", ",", "\"\<b\>\"", ",", "\"\<c\>\""}], "}"}]}], 
+      "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"r", ",", "1", ",", "2"}], "}"}]}], "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Flatten", "[", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"And", "@@", 
+      RowBox[{"Thread", "[", 
+       RowBox[{
+        RowBox[{"Eigenvalues", "[", 
+         RowBox[{
+          RowBox[{"CartanMatrix", "[", 
+           RowBox[{"type", ",", "r"}], "]"}], "//", "N"}], "]"}], ">", "0"}], 
+       "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"type", ",", 
+       RowBox[{"{", 
+        RowBox[{
+        "\"\<a\>\"", ",", "\"\<b\>\"", ",", "\"\<c\>\"", ",", "\"\<d\>\""}], 
+        "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"r", ",", "3", ",", "100"}], "}"}]}], "]"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"And", "@@", 
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"And", "@@", 
+     RowBox[{"Thread", "[", 
+      RowBox[{
+       RowBox[{"Eigenvalues", "[", 
+        RowBox[{
+         RowBox[{"CartanMatrix", "[", "type", "]"}], "//", "N"}], "]"}], ">", 
+       "0"}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"type", ",", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<e6\>\"", ",", "\"\<e7\>\"", ",", "\"\<e8\>\"", ",", "\"\<f4\>\"", 
+        ",", "\"\<g2\>\""}], "}"}]}], "}"}]}], "]"}]}]], "Input"]
+}, Closed]]
+}, Closed]]
+},
+AutoGeneratedPackage->None,
+WindowSize->{1144, 748},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+ShowSelection->True,
+TrackCellChangeTimes->False,
+FrontEndVersion->"7.0 for Linux x86 (64-bit) (February 25, 2009)",
+StyleDefinitions->"Default.nb"
+]
