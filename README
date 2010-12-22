@@ -1,0 +1,7 @@
+Semisimple Lie Algebras
+Version: 0.1
+
+An incomplete Mathematica package for doing calculations on semisimple Lie algebras and a notebook full of tests of the various functions.  
+
+The original code is hosted at http://github.com/simonjtyler/SemisimpleLieAlg
+If you wish to use or contribute to this package, or have any other comments, please message me on github. 
